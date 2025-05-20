@@ -9,4 +9,4 @@ Jurassicdex/app/.gitignore
 Jurassicdex/app/proguard-rules.pro
 
 
-!Jurassicdex\app\build\outputs\apk\debug\app-debug.apk
+!Jurassicdex/app/build/outputs/apk/debug/app-debug.apk
