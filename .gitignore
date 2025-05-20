@@ -4,7 +4,7 @@ Jurassicdex/.kotlin
 Jurassicdex/gradle*
 Jurassicdex/.gitignore
 Jurassicdex/local
-Jurassicdex/app/build
+Jurassicdex/app/build/*
 Jurassicdex/app/.gitignore
 Jurassicdex/app/proguard-rules.pro
 
