@@ -2,7 +2,6 @@ package pwr.wit.jurassicdex.ui.view
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.graphics.Insets.add
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,22 +25,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import pwr.wit.jurassicdex.ui.components.*
-import coil.ImageLoader
 import pwr.wit.jurassicdex.R
+import pwr.wit.jurassicdex.ui.components.Footer
+import pwr.wit.jurassicdex.ui.components.Header
 
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -86,7 +84,6 @@ fun Start(modifier: Modifier = Modifier, navController: NavHostController) {
                             append("Poznaj fascynujący świat dinozaurów!\n")
                             append("Odkrywaj gatunki, ciekawostki i prehistoryczne fakty w naszej interaktywnej encyklopedii.\n")
                             append("Zanurz się w erę jurajską!")
-
 
                         },
                         color = Color.Black,
