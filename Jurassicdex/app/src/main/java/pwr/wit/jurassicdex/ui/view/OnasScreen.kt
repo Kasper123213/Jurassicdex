@@ -1,8 +1,11 @@
 package pwr.wit.jurassicdex.ui.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,6 +41,10 @@ import androidx.navigation.NavHostController
 import pwr.wit.jurassicdex.R
 import pwr.wit.jurassicdex.ui.components.Footer
 import pwr.wit.jurassicdex.ui.components.Header
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material3.Icon
+
 
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -54,13 +61,13 @@ fun OnasScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             navController,
             configuration
         )
-        Row(
+        Box(
 //            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
 //            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth(0.95f)
-                .offset(y = maxHeight * 0.2f)
+                .offset(y = if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) maxHeight*0.27f else maxHeight*0.16f)
                 .requiredHeight(height = maxHeight*0.67f)
         ) {
             Column(
@@ -73,7 +80,7 @@ fun OnasScreen(modifier: Modifier = Modifier, navController: NavHostController) 
             ) {
                 Box(
                     modifier = modifier
-//                        .requiredWidth(width = 276.dp)
+                        .padding(15.dp)
                         .wrapContentHeight()
                 ) {
                     Text(
@@ -120,6 +127,31 @@ fun OnasScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                         modifier = Modifier
                             .fillMaxSize()
                             .wrapContentHeight(align = Alignment.CenterVertically))
+                }
+                val email = "jurassicdex@hotmail.com"
+                val context = LocalContext.current
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .clickable {
+                            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                data = Uri.parse("mailto:$email")
+                            }
+                            context.startActivity(intent)
+                        }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Email,
+                        contentDescription = "Email",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = email,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
                 }
                 Image(
                     painter = painterResource(id = R.drawable.onas),

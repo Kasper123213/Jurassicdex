@@ -74,7 +74,7 @@ fun Header(modifier: Modifier = Modifier, navController: NavHostController, conf
             )
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp) // nadaje rozmiar
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
                     text = "JurassicDex",

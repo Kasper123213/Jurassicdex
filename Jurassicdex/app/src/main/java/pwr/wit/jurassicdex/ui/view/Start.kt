@@ -56,11 +56,11 @@ fun Start(modifier: Modifier = Modifier, navController: NavHostController) {
             navController,
             configuration
         )
-        Row(
+        Box(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth(0.95f)
-                .offset(y = maxHeight * 0.2f)
+                .offset(y = if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) maxHeight*0.27f else maxHeight*0.16f)
                 .requiredHeight(height = maxHeight*0.67f)
         ) {
             Column(
@@ -73,7 +73,7 @@ fun Start(modifier: Modifier = Modifier, navController: NavHostController) {
             ) {
                 Box(
                     modifier = modifier
-//                        .requiredWidth(width = 250.dp)
+                        .padding(15.dp)
                         .wrapContentHeight()
                 ) {
                     Text(
