@@ -43,7 +43,9 @@ class DinosaurViewModel : ViewModel() {
                 }
                 append(" Roślinożerny (liście drzew)")
             },
-            text2 = "Mimo że był jednym z największych dinozaurów, jego mózg ważył zaledwie około 300 gramów – mniej niż ludzka pięść! Co ciekawe, miał nozdrza na czubku głowy, przez co naukowcy początkowo sądzili, że żył w wodzie jak hipopotam."
+            text2 = "Mimo że był jednym z największych dinozaurów, jego mózg ważył zaledwie około 300 gramów – mniej niż ludzka pięść! Co ciekawe, miał nozdrza na czubku głowy, przez co naukowcy początkowo sądzili, że żył w wodzie jak hipopotam.",
+            video = R.raw.brachiosaurus,
+            audio = R.raw.brachiosaurusaudio
         ),
 
 
@@ -83,7 +85,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Płyty na jego grzbiecie nie służyły tylko do obrony – najnowsze badania sugerują, że mogły być pokryte " +
                     "żyłami krwionośnymi i pomagały w regulacji temperatury ciała. A jego kolce ogonowe? Nazywane są " +
-                    "„thagomizer” – to nieoficjalna nazwa, która powstała dzięki komiksowi „The Far Side”!"
+                    "„thagomizer” – to nieoficjalna nazwa, która powstała dzięki komiksowi „The Far Side”!",
+            video = R.raw.stegosaurus,
+            audio = R.raw.stegosaurusaudio
         ),
 
 
@@ -123,7 +127,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Miał jeden z największych rogatych łbów wśród dinozaurów, a jego kryza mogła pełnić funkcję nie tylko" +
                     "ochronną, ale też służyć do komunikacji w stadzie. Niektóre skamieniałości wskazują na zróżnicowanie " +
-                    "kształtu rogów między osobnikami."
+                    "kształtu rogów między osobnikami.",
+            video = R.raw.triceratops,
+            audio = R.raw.triceratopsaudio
         ),
 
 
@@ -163,7 +169,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Miał najsilniejsze ugryzienie ze wszystkich znanych dinozaurów – mógł zgniatać kości z siłą ponad 5 ton " +
                     "na cm²! Ale za to jego przednie łapy były tak małe, że nie sięgały nawet do pyska. Naukowcy wciąż " +
-                    "spierają się, czy był drapieżnikiem, czy raczej padlinożercą."
+                    "spierają się, czy był drapieżnikiem, czy raczej padlinożercą.",
+            video = R.raw.tyrannosaurus_rex,
+            audio = R.raw.tyrannosaurus_rexaudio
         ),
 
 
@@ -196,7 +204,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Ten morski potwór mógł osiągać nawet 15 metrów długości, choć niektórzy naukowcy uważają, że mógł " +
                     "być jeszcze większy. Jego zęby były tak ostre, że mógł przegryźć nawet skorupę olbrzymich morskich " +
-                    "żółwi!"
+                    "żółwi!",
+            video = R.raw.liopleurodon,
+            audio = R.raw.liopleurodonaudio
         ),
 
 
@@ -225,7 +235,9 @@ class DinosaurViewModel : ViewModel() {
                 append(" Mięsożerny (ryby, kałamarnice)")
             },
             text2 = "Choć wyglądał jak delfin, był gadem – i to jednym z najszybszych w prehistorycznych oceanach. Niektóre " +
-                    "gatunki rodziły żywe młode, a nie składały jaja, co rzadko zdarzało się u gadów!"
+                    "gatunki rodziły żywe młode, a nie składały jaja, co rzadko zdarzało się u gadów!",
+            video = R.raw.ichthyosaur,
+            audio = R.raw.ichthyosauraudio
         ),
 
 
@@ -258,7 +270,9 @@ class DinosaurViewModel : ViewModel() {
                 }
                 append(" Mięsożerny (ryby, żółwie, inne morskie gady)")
             },
-            text2 = "Miał podwójne stawy w szczękach, dzięki którym mógł połykać ogromne kęsy pokarmu – niczym współczesny wąż. Co więcej, jego zęby były zakrzywione do tyłu, więc ofiara nie miała szans na ucieczkę."
+            text2 = "Miał podwójne stawy w szczękach, dzięki którym mógł połykać ogromne kęsy pokarmu – niczym współczesny wąż. Co więcej, jego zęby były zakrzywione do tyłu, więc ofiara nie miała szans na ucieczkę.",
+            video = R.raw.mosasaurus,
+            audio = R.raw.mosasaurusaudio
         ),
 
 
@@ -288,7 +302,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Długość jego szyi mogła stanowić nawet połowę całego ciała! Naukowcy długo zastanawiali się, jak mógł " +
                     "polować z tak nieporęczną szyją – prawdopodobnie używał jej jak wędki, by zaskakiwać ofiary szybkim " +
-                    "ruchem."
+                    "ruchem.",
+            video = R.raw.plesiosaurus,
+            audio = R.raw.plesiosaurusaudio
         ),
 
 
@@ -316,7 +332,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "Miał dwa rodzaje zębów – długie z przodu i krótkie z tyłu – co jest rzadkością u gadów. Prawdopodobnie " +
                     "polował na owady i małe zwierzęta, ale jego sposób latania był dość niezdarny – bardziej szybował niż " +
-                    "aktywnie machał skrzydłami."
+                    "aktywnie machał skrzydłami.",
+            video = R.raw.dimorphodon,
+            audio = R.raw.dimorphodonaudio
         ),
 
 
@@ -345,7 +363,9 @@ class DinosaurViewModel : ViewModel() {
                 append(" Rybożerny")
             },
             text2 = "Jego ogon zakończony był romboidalną płytką, która prawdopodobnie pomagała mu stabilizować lot. Co " +
-                    "ciekawe, młode osobniki miały krótsze ogony, które wydłużały się z wiekiem."
+                    "ciekawe, młode osobniki miały krótsze ogony, które wydłużały się z wiekiem.",
+            video = R.raw.rhamphorhynchus,
+            audio = R.raw.rhamphorhynchusaudio
         ),
 
 
@@ -378,7 +398,9 @@ class DinosaurViewModel : ViewModel() {
                 }
                 append(" Mięsożerny (małe dinozaury, padlina)")
             },
-            text2 = ""
+            text2 = "",
+            video = R.raw.quetzalcoatlus,
+            audio = R.raw.quetzalcoatlusaudio
         ),
 
 
@@ -408,7 +430,9 @@ class DinosaurViewModel : ViewModel() {
             },
             text2 = "W przeciwieństwie do wielu innych pterozaurów, nie miał zębów – żywił się rybami, które chwytał " +
                     "w locie. Jego charakterystyczny grzebień mógł służyć do sterowania podczas lotu lub. . . imponowania " +
-                    "partnerkom."
+                    "partnerkom.",
+            video = R.raw.pteranodon,
+            audio = R.raw.pteranodonaudio
         ),
 
 

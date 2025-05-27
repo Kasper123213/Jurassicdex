@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,14 +45,19 @@ import pwr.wit.jurassicdex.ui.components.Header
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.Icon
-
+import androidx.compose.ui.platform.testTag
 
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun OnasScreen(modifier: Modifier = Modifier, navController: NavHostController) {
     val configuration = LocalConfiguration.current
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()){
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .testTag("onas_screen")
+    ){
         Header(
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
@@ -148,9 +154,7 @@ fun OnasScreen(modifier: Modifier = Modifier, navController: NavHostController) 
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     Text(
-                        text = email,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground
+                        text = email
                     )
                 }
                 Image(

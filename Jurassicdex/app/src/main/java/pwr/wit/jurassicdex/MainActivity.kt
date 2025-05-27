@@ -21,8 +21,11 @@ import pwr.wit.jurassicdex.ui.view.Start
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import androidx.compose.animation.*
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavBackStackEntry
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,78 +50,55 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(navController: NavHostController) {
+    val customEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
+        slideInHorizontally(
+            initialOffsetX = { fullWidth -> fullWidth * 2 },
+            animationSpec = tween(durationMillis = 400, easing = EaseOut)
+        ) + fadeIn(
+            animationSpec = tween(durationMillis = 300, delayMillis = 10)
+        )
+    }
+
     AnimatedNavHost(navController = navController, startDestination = "start") {
         composable(
             route = "start",
-            enterTransition = { scaleIn(
-                animationSpec = tween(500),
-                initialScale = 0.8f
-                ) + fadeIn(tween(500))
-            },
-            exitTransition = { scaleOut(
-                animationSpec = tween(400),
-                targetScale = 0.8f
-                ) + fadeOut(tween(400))
-            }
+            enterTransition = customEnterTransition
+
         ) {
             Start(navController=navController)
         }
         composable(
             route = "category/{cathegoryTypeName}",
-            enterTransition = { fadeIn(animationSpec = tween(500)) + slideInHorizontally { it } },
-            exitTransition = { fadeOut(animationSpec = tween(300)) + slideOutHorizontally { -it } }
+            enterTransition = customEnterTransition
+
             ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("cathegoryTypeName") ?: ""
             CategotyScreen(navController=navController, categoryName = name)
         }
         composable(
             route = "dinosaur/{dinozaurName}",
-            enterTransition = { slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(300)
-                ) + fadeIn(tween(300))
-            },
-            exitTransition = { slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(300)
-                ) + fadeOut(tween(300))
-            }
+            enterTransition = customEnterTransition
+
         ) { backStackEntry ->
             val name = backStackEntry.arguments?.getString("dinozaurName") ?: ""
             DinosaurScreen(navController=navController, dinozaurName = name)
         }
         composable(
             route = "onas",
-            enterTransition = { expandIn(
-                animationSpec = tween(500),
-                expandFrom = Alignment.Center
-                ) + fadeIn(tween(500))
-            },
-            exitTransition = {
-                shrinkOut(
-                    animationSpec = tween(400),
-                    shrinkTowards = Alignment.Center
-                ) + fadeOut(tween(400))
-            }
+            enterTransition = customEnterTransition
+
         ) {
             OnasScreen(navController=navController)
         }
         composable(
             route = "quiz",
-            enterTransition = {
-                scaleIn(
-                    initialScale = 0.8f,
-                    animationSpec = tween(400)
-                ) + fadeIn(animationSpec = tween(400))
-            },
-            exitTransition = {
-                scaleOut(
-                    targetScale = 1.2f, // z normalnego na większy i znika
-                    animationSpec = tween(300)
-                ) + fadeOut(animationSpec = tween(300))
-            }
+            enterTransition = customEnterTransition
+
         ) {
             QuizScreen(navController=navController)
         }
     }
 }
+
+
+

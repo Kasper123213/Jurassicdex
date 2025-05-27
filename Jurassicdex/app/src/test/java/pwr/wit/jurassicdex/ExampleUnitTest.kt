@@ -1,7 +1,38 @@
 package pwr.wit.jurassicdex.ui.modelView
 
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.TestCase.assertEquals
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import pwr.wit.jurassicdex.MainActivity
+import pwr.wit.jurassicdex.NavGraph
+
+
+//@RunWith(AndroidJUnit4::class)
 class ExampleUnitTest{
 
+//    @get:Rule
+//    val composeTestRule = createAndroidComposeRule<MainActivity>()
+//
+////    @get:Rule
+////    val composeTestRule = createComposeRule()
+//
+//    @Test
+//    fun `navHost should have start screen as initial destination`() {
+//        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+//
+//        composeTestRule.setContent {
+//            NavGraph(navController = navController)
+//        }
+//
+//        // Sprawdź, czy początkowy ekran to "start"
+//        assertEquals("start", navController.currentBackStackEntry?.destination?.route)
+//    }
 }
 //
 //class DinosaurViewModelTest {

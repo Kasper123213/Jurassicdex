@@ -6,5 +6,7 @@ data class DinosaurData(
     val title: String,
     val images: List<Int>,
     val text1: AnnotatedString,
-    val text2: String
+    val text2: String,
+    val video: Int? = null,
+    val audio: Int? = null
 )

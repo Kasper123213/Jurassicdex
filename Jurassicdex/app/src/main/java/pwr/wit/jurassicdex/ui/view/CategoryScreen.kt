@@ -1,6 +1,7 @@
 package pwr.wit.jurassicdex.ui.view
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,12 +18,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +36,6 @@ import androidx.navigation.NavHostController
 import pwr.wit.jurassicdex.ui.components.Footer
 import pwr.wit.jurassicdex.ui.components.Header
 import pwr.wit.jurassicdex.ui.modelView.CategoryViewModel
-import pwr.wit.jurassicdex.ui.theme.LightBrown
 
 @Composable
 fun CategotyScreen(
@@ -45,7 +47,12 @@ fun CategotyScreen(
     val categoryType = categotyViewModel.getCategoryByName(categoryName) ?: return
     val configuration = LocalConfiguration.current
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()){
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .testTag("${categoryName}_screen")
+    ){
         Header(
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
@@ -84,8 +91,16 @@ fun CategotyScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(170.dp)
-                        .background(color = LightBrown)
-                        .clickable { navController.navigate("${category.destination}") }
+                        .background(color = MaterialTheme.colorScheme.primary)
+                        .testTag("category_${category.name}_button")
+                        .clickable {
+                            val currentCategory = navController.currentBackStackEntry
+                                ?.arguments
+                                ?.getString("cathegoryTypeName")
+                            if (category.destination != "category/${currentCategory}" && currentCategory != null) {
+                                navController.navigate("${category.destination}")
+                            }
+                        }
 
                 ) {
                     Box(

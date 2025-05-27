@@ -1,6 +1,7 @@
 package pwr.wit.jurassicdex.ui.components
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,29 +19,41 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pwr.wit.jurassicdex.R
-import pwr.wit.jurassicdex.ui.theme.Brown
-import pwr.wit.jurassicdex.ui.theme.LightBrown
 
 
 @Composable
@@ -66,9 +79,12 @@ fun Header(modifier: Modifier = Modifier, navController: NavHostController, conf
                 modifier = Modifier
                     .requiredSize(70.dp)
                     .clip(RoundedCornerShape(10.dp))
+                    .testTag("logo_button")
                     .clickable {
-                        navController.navigate("start"){
-                            launchSingleTop = true
+                        if (navController.currentBackStackEntry?.destination?.route != "start") {
+                            navController.navigate("start"){
+                                launchSingleTop = true
+                            }
                         }
                     }
             )
@@ -93,27 +109,39 @@ fun Header(modifier: Modifier = Modifier, navController: NavHostController, conf
 @Composable
 fun HamburgerMenuOverlay(navController: NavHostController, configuration: Configuration) {
     var expanded by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(
-                id = if (expanded) R.drawable.close_icon else R.drawable.hamburger_button
-            ),
-            contentDescription = "hamburger_menu",
+    Box(modifier = Modifier
+        .fillMaxSize()
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(10.dp)
-                .requiredSize(40.dp)
+                .requiredSize(50.dp)
                 .offset(x = 30.dp, y = -60.dp)
-                .clickable { expanded = !expanded } // zmiana stanu
-        )
+                .clickable { expanded = !expanded }
+                .clip(RoundedCornerShape(8.dp))
+                .background(color = MaterialTheme.colorScheme.primary)
+                .testTag("hamburger_menu")
+        ) {
+            Icon(
+                imageVector = if (expanded) Icons.Default.Close else Icons.Default.Menu,
+                contentDescription = "hamburger_menu",
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .fillMaxSize(0.8f)
+            )
+        }
 
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .background(Brown)
-                .clip(RoundedCornerShape(8.dp)),
+                .background(MaterialTheme.colorScheme.secondary)
+                .clip(RoundedCornerShape(8.dp))
+                .testTag("menu_list"),
             offset = DpOffset(x = 0.dp, y = if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) -100.dp else -60.dp)
         ) {
             DropdownMenuItem(
@@ -125,10 +153,16 @@ fun HamburgerMenuOverlay(navController: NavHostController, configuration: Config
                             .wrapContentHeight()
                             .clip(RoundedCornerShape(8.dp))
                             .height(30.dp)
-                            .background(color = LightBrown)
+                            .background(color = MaterialTheme.colorScheme.primary)
                             .clickable {
-                                navController.navigate("start"){
-                                    launchSingleTop = true
+                                expanded = false
+                                coroutineScope.launch {
+                                    delay(100)
+                                    if (navController.currentBackStackEntry?.destination?.route != "start") {
+                                        navController.navigate("start"){
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 }
                             },
 
@@ -150,10 +184,21 @@ fun HamburgerMenuOverlay(navController: NavHostController, configuration: Config
                                 .wrapContentHeight()
                                 .clip(RoundedCornerShape(8.dp))
                                 .height(30.dp)
-                                .background(color = LightBrown)
+                                .background(color = MaterialTheme.colorScheme.primary)
+                                .testTag("category_button")
                                 .clickable {
-                                    navController.navigate("category/Kategorie"){
-                                        launchSingleTop = true
+                                    expanded = false
+                                    coroutineScope.launch {
+                                        delay(100)
+                                        val currentCategory = navController.currentBackStackEntry
+                                            ?.arguments
+                                            ?.getString("cathegoryTypeName")
+
+                                        if (currentCategory != "Kategorie") {
+                                            navController.navigate("category/Kategorie"){
+                                                launchSingleTop = true
+                                            }
+                                        }
                                     }
                                 },
 
@@ -175,11 +220,19 @@ fun HamburgerMenuOverlay(navController: NavHostController, configuration: Config
                             .wrapContentHeight()
                             .clip(RoundedCornerShape(8.dp))
                             .height(30.dp)
-                            .background(color = LightBrown)
+                            .background(color = MaterialTheme.colorScheme.primary)
+                            .testTag("quiz_button")
                             .clickable {
-                                navController.navigate("quiz") {
-                                    launchSingleTop = true
+                                expanded = false
+                                coroutineScope.launch {
+                                    delay(100)
+                                    if (navController.currentBackStackEntry?.destination?.route != "quiz") {
+                                        navController.navigate("quiz"){
+                                            launchSingleTop = true
+                                        }
+                                    }
                                 }
+
                             }
 
                     ){
@@ -200,11 +253,20 @@ fun HamburgerMenuOverlay(navController: NavHostController, configuration: Config
                             .wrapContentHeight()
                             .clip(RoundedCornerShape(8.dp))
                             .height(30.dp)
-                            .background(color = LightBrown)
+                            .background(color = MaterialTheme.colorScheme.primary)
+                            .testTag("onas_button")
                             .clickable {
-                            navController.navigate("onas"){
-                                launchSingleTop = true
-                        }
+                                expanded = false
+                                coroutineScope.launch {
+                                    delay(100)
+                                    if (navController.currentBackStackEntry?.destination?.route != "onas") {
+                                        navController.navigate("onas"){
+                                            launchSingleTop = true
+                                        }
+                                    }
+                                }
+
+
                     }
                         ){
                         Text(
@@ -230,11 +292,12 @@ fun Footer(modifier: Modifier = Modifier, navController: NavHostController) {
         modifier = modifier
             .fillMaxWidth()
             .requiredHeight(height = 106.dp)
+            .testTag("footer")
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Brown))
+                .background(color = MaterialTheme.colorScheme.secondary))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -246,7 +309,8 @@ fun Footer(modifier: Modifier = Modifier, navController: NavHostController) {
                 modifier = Modifier
                     .size(64.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(LightBrown)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .testTag("arrow_back_button")
                     .clickable {
                         if (navController.previousBackStackEntry != null) {
                             navController.popBackStack()
@@ -254,9 +318,10 @@ fun Footer(modifier: Modifier = Modifier, navController: NavHostController) {
                     }
 
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.arrow),
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "arrow_back",
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(43.dp)
@@ -268,16 +333,20 @@ fun Footer(modifier: Modifier = Modifier, navController: NavHostController) {
                 modifier = Modifier
                     .size(64.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(LightBrown)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .testTag("home_button")
                     .clickable {
-                        navController.navigate("start"){
-                            launchSingleTop = true
+                        if (navController.currentBackStackEntry?.destination?.route != "start") {
+                            navController.navigate("start"){
+                                launchSingleTop = true
+                            }
                         }
                     }
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.home_icon),
+                Icon(
+                    imageVector = Icons.Default.Home,
                     contentDescription = "Home",
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(48.dp)
@@ -289,16 +358,20 @@ fun Footer(modifier: Modifier = Modifier, navController: NavHostController) {
                 modifier = Modifier
                     .size(64.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(LightBrown)
+                    .background(MaterialTheme.colorScheme.primary)
+                    .testTag("question_button")
                     .clickable {
-                        navController.navigate("quiz") {
-                            launchSingleTop = true
+                        if (navController.currentBackStackEntry?.destination?.route != "quiz") {
+                            navController.navigate("quiz"){
+                                launchSingleTop = true
+                            }
                         }
                     }
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.quiz_icon),
+                Icon(
+                    imageVector = ImageVector.vectorResource(id = R.drawable.quiz_icon),
                     contentDescription = "Quiz",
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(48.dp)

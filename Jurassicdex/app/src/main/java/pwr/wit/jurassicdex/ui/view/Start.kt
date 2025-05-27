@@ -3,6 +3,7 @@ package pwr.wit.jurassicdex.ui.view
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -45,7 +47,13 @@ import pwr.wit.jurassicdex.ui.components.Header
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun Start(modifier: Modifier = Modifier, navController: NavHostController) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()){
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .testTag("start_screen")
+    ){
         val configuration = LocalConfiguration.current
         Header(
             modifier = Modifier

@@ -8,15 +8,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,48 +66,86 @@ fun QuizScreen(
     
 
 
-    //mieszanie pytań
-    val shuffledQuestions = rememberSaveable {
-        viewModel.questions.shuffled().map { question ->
-            // mieszanie odpowiedzi
-            question.copy(
-                answers = question.answers.shuffled()
-            )
-        }.take(allQuestions)
+//    //mieszanie pytań
+//    var shuffledQuestions = rememberSaveable {
+//        viewModel.questions.shuffled().map { question ->
+//            // mieszanie odpowiedzi
+//            question.copy(
+//                answers = question.answers.shuffled()
+//            )
+//        }.take(allQuestions)
+//    }
+    var shuffledQuestions = rememberSaveable {
+        mutableStateOf(
+            viewModel.questions.shuffled().map { question ->
+                question.copy(
+                    answers = question.answers.shuffled()
+                )
+            }.take(allQuestions)
+        )
     }
+
 
     var currentQuestionIndex by rememberSaveable { mutableStateOf(0) }
     var selectedAnswerIndex by rememberSaveable { mutableStateOf<Int?>(null) }
     var showResult by rememberSaveable { mutableStateOf(false) }
 
-    val question = shuffledQuestions.getOrNull(currentQuestionIndex)
+//    val question = shuffledQuestions.getOrNull(currentQuestionIndex)
+    val question = shuffledQuestions.value.getOrNull(currentQuestionIndex)
+
     val configuration = LocalConfiguration.current
 
 
 
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()){
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .testTag("quiz_screen")
+    ){
         if (question == null) {
-            val background = getScoreColor(1.0f-correctAnswers.toFloat()/allQuestions)
-            Box(
+
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures { _, dragAmount ->
-                            if (dragAmount < -100) { // przesunięcie z prawej do lewej
-                                navController.navigate("start"){
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
-                    }
-                    .background(background),
-                contentAlignment = Alignment.Center
+                    .offset(y=maxHeight/2-30.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "Twój wynik: $correctAnswers/$allQuestions",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = getContrastingTextColor(background)
+                    style = MaterialTheme.typography.titleLarge
                 )
+                Row(
+                    modifier = Modifier
+                        .clickable() {
+                            currentQuestionIndex=0
+                            selectedAnswerIndex = null
+                            showResult = false
+                            correctAnswers = 0
+                            coroutineScope.launch {
+                                scrollState.scrollTo(0)  // przewiń na górę
+                            }
+                            isAnswersCorrect = true
+
+                            shuffledQuestions.value = viewModel.questions.shuffled().map { question ->
+                                question.copy(
+                                    answers = question.answers.shuffled()
+                                )
+                            }.take(allQuestions)
+                        }
+
+                ){
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "TryAgain",
+                        tint = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                    Text(
+                        text = "Spróbuj ponownie"
+                    )
+                }
+
             }
 
         }
@@ -110,7 +157,24 @@ fun QuizScreen(
                     .offset(y = if(configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)maxHeight * 0.3f else maxHeight * 0.2f)
                     .padding(24.dp)
                     .fillMaxHeight(0.67f)
-                    .verticalScroll(scrollState),
+                    .verticalScroll(scrollState)
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures { _, dragAmount ->
+                            if (dragAmount < -50) { // przesunięcie z prawej do lewej
+                                if (showResult) {
+                                    currentQuestionIndex++
+                                    selectedAnswerIndex = null
+                                    showResult = false
+                                    if (isAnswersCorrect) correctAnswers++
+                                    coroutineScope.launch {
+                                        scrollState.scrollTo(0)  // przewiń na górę
+                                    }
+                                    isAnswersCorrect = true
+
+                                }
+                            }
+                        }
+                    },
                 verticalArrangement = Arrangement.spacedBy(17.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -127,7 +191,7 @@ fun QuizScreen(
 
                 question.answers.forEachIndexed { index, answer ->
                     val isSelected = selectedAnswerIndex == index
-                    val isCorrect = answer == question.correctAnswerIndex
+                    val isCorrect = answer == question.correctAnswer
                     
                     if (showResult && isSelected && !isCorrect) isAnswersCorrect = false
                     
@@ -143,39 +207,45 @@ fun QuizScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(backgroundColor)
-                            .clickable(enabled = !showResult) { selectedAnswerIndex = index }
+                            .clickable(enabled = !showResult) {
+                                showResult = true
+                                selectedAnswerIndex = index
+                            }
                             .padding(16.dp)
                             .shadow(5.dp)
-                            .height(87.dp)
+//                            .height(87.dp)
+                            .defaultMinSize(minHeight = 87.dp)
+                            .wrapContentHeight()
                     ) {
                         Text(
                             text = answer,
+                            textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .padding(10.dp)
                         )
                     }
                 }
 
-                Button(
-                    onClick = {
-                        if (showResult) {
-                            currentQuestionIndex++
-                            selectedAnswerIndex = null
-                            showResult = false
-                            if (isAnswersCorrect) correctAnswers++
-                            coroutineScope.launch {
-                                scrollState.scrollTo(0)  // przewiń na górę
-                            }
-                            isAnswersCorrect = true
-
-                        } else {
-                            showResult = true
-                        }
-                    },
-                    enabled = selectedAnswerIndex != null
-                ) {
-                    Text(if (showResult) "Następne" else "Sprawdź")
-                }
+//                Button(
+//                    onClick = {
+//                        if (showResult) {
+//                            currentQuestionIndex++
+//                            selectedAnswerIndex = null
+//                            showResult = false
+//                            if (isAnswersCorrect) correctAnswers++
+//                            coroutineScope.launch {
+//                                scrollState.scrollTo(0)  // przewiń na górę
+//                            }
+//                            isAnswersCorrect = true
+//
+//                        } else {
+//                            showResult = true
+//                        }
+//                    },
+//                    enabled = selectedAnswerIndex != null
+//                ) {
+//                    Text(if (showResult) "Następne" else "Sprawdź")
+//                }
             }
         }
         Header(
@@ -201,33 +271,33 @@ fun QuizScreen(
     }
 }
 
-fun getScoreColor(value: Float): Color {
-    return when {
-        value <= 0.5f -> {
-            // zielony → pomarańczowy
-            val ratio = value / 0.5f
-            Color(
-                red = ratio,
-                green = 1f,
-                blue = 0f
-            )
-        }
-        else -> {
-            // pomarańczowy → czerwony
-            val ratio = (value - 0.5f) / 0.5f
-            Color(
-                red = 1f,
-                green = 1f - ratio,
-                blue = 0f
-            )
-        }
-    }
-}
+//fun getScoreColor(value: Float): Color {
+//    return when {
+//        value <= 0.5f -> {
+//            // zielony → pomarańczowy
+//            val ratio = value / 0.5f
+//            Color(
+//                red = ratio,
+//                green = 1f,
+//                blue = 0f
+//            )
+//        }
+//        else -> {
+//            // pomarańczowy → czerwony
+//            val ratio = (value - 0.5f) / 0.5f
+//            Color(
+//                red = 1f,
+//                green = 1f - ratio,
+//                blue = 0f
+//            )
+//        }
+//    }
+//}
 
-fun getContrastingTextColor(background: Color): Color {
-    val luminance = background.red * 0.2126f + background.green * 0.7152f + background.blue * 0.0722f
-    return if (luminance > 0.5f) Color.Black else Color.White
-}
+//fun getContrastingTextColor(background: Color): Color {
+//    val luminance = background.red * 0.2126f + background.green * 0.7152f + background.blue * 0.0722f
+//    return if (luminance > 0.5f) Color.Black else Color.White
+//}
 
 
 @Preview(widthDp = 360, heightDp = 804)
