@@ -118,7 +118,8 @@ fun CategotyScreen(
                         )
                     }
                     Text(
-                        text = category.name
+                        text = category.name,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

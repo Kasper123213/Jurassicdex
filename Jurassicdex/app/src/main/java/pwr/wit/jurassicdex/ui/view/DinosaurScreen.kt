@@ -37,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -161,7 +162,6 @@ fun DinosaurScreen(
             }
 
 
-            dinozaur.audio?.let { AudioPlayer(it) }
 
             Box(
                 modifier = Modifier
@@ -175,6 +175,9 @@ fun DinosaurScreen(
                 text = dinozaur.text2,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 21.dp)
             )
+
+
+            dinozaur.audio?.let { AudioPlayer(it) }
         }
 
 
@@ -262,6 +265,13 @@ fun AudioPlayer(
         MediaPlayer.create(context, audioResId)
     }
 
+    // Dodaj listener do zmiany stanu po zakończeniu odtwarzania
+    LaunchedEffect(mediaPlayer) {
+        mediaPlayer.setOnCompletionListener {
+            isPlaying = false
+        }
+    }
+
     Column(modifier = modifier.padding(16.dp)) {
         Button(onClick = {
             if (mediaPlayer.isPlaying) {
@@ -283,4 +293,5 @@ fun AudioPlayer(
         }
     }
 }
+
 

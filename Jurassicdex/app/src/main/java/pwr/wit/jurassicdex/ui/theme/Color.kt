@@ -9,5 +9,5 @@ val BackgroundLight = Color(0xFFFFFFFF)
 
 val DarkBrown = Color(0xFF492A0E)
 val MediumBrown = Color(0xFFA27020)
-val IconsColorDark = Color(0xFFBBBBBB)
+val IconsColorDark = Color.White
 val BackgroundDark = Color(0xFFEBEBEB)
